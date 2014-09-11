@@ -1,5 +1,5 @@
 Name:                   onping-tag-report
-Version:                0.0.0
+Version:                0.1.0
 Author:                 Lingpo Huang <lingpo.huang@plowtech.net>
 Maintainer:             Lingpo Huang <lingpo.huang@plowtech.net>
 License:                BSD3
@@ -15,8 +15,29 @@ Library
   GHC-Options:          -Wall
   Exposed-Modules:      Onping.Tag.Report
   Other-Modules:        Onping.Tag.Report.Internal
-  Build-Depends:        base >= 4 && < 5
+  Build-Depends:        base                           >= 4 && < 5
+                      , aeson                          >= 0.7.0.2   &&   < 0.8
+                      , persist-mongo-template         >= 0.5.12
+                      , persistent                     >= 1.3.0.6   && < 1.3.2
+                      , persistent-mongoDB             >= 1.3.1.1   && < 1.4.3
+                      , text
+                      , HStringTemplate                >= 0.7       && < 0.8 
 
+
+Executable onping-tag-report
+   main-is:            Main.hs
+   HS-Source-Dirs:     src   
+   default-language:  Haskell2010
+   ghc-options:       -threaded -O2 -rtsopts -Wall   
+   build-depends:       base
+                      , aeson                          >= 0.7.0.2   &&   < 0.8
+                      , persist-mongo-template         >= 0.5.12
+                      , persistent                     >= 1.3.0.6   && < 1.3.2
+                      , persistent-mongoDB             >= 1.3.1.1   && < 1.4.3
+                      , text
+                      , HStringTemplate                >= 0.7       && < 0.8 
+
+   
 Test-Suite spec
   Type:                 exitcode-stdio-1.0
   Default-Language:     Haskell2010
@@ -26,6 +47,12 @@ Test-Suite spec
   Main-Is:              Spec.hs
   Build-Depends:        base
                       , hspec
+                      , aeson                          
+                      , persist-mongo-template         
+                      , persistent                    
+                      , persistent-mongoDB             
+                      , text
+                      , HStringTemplate 
 
 Source-Repository head
   Type:                 git

@@ -24,7 +24,7 @@ Library
                       , HStringTemplate                >= 0.7       && < 0.8 
 
 
-Executable onping-tag-report
+Executable onpingtagreport
    main-is:            Main.hs
    HS-Source-Dirs:     src   
    default-language:  Haskell2010

@@ -65,7 +65,7 @@ buildOTCSTemplate otc = render otcSTemplate
   where otcName = onpingTagCombinedDescription otc
         otcSlaveParameterId = onpingTagCombinedSlave_parameter_id otc
         otcParameterTagId = onpingTagCombinedParameter_tag_id otc
-        baseTemplate = (newSTMP "<tr><$tag_name$>, <$slave_parameter_id$>, <$parameter_tag_Id$></tr>") :: StringTemplate String
+        baseTemplate = (newSTMP "<tr><td>$tag_name$</td> <td>$slave_parameter_id$</td> <td>$parameter_tag_Id$</td></tr>") :: StringTemplate String
         otcSTemplate = setAttribute "tag_name" otcName .
                        setAttribute "slave_parameter_id" otcSlaveParameterId .
                        setAttribute "parameter_tag_Id" otcParameterTagId $ baseTemplate
@@ -73,7 +73,7 @@ buildOTCSTemplate otc = render otcSTemplate
 buildTableSTemplate :: [OnpingTagCombined] -> String
 buildTableSTemplate otcList = render tableSTemplate
   where otcSTemplates = unlines $ buildOTCSTemplate <$> otcList
-        baseTemplate = (newSTMP "<table> \n\
+        baseTemplate = (newSTMP "<table class='table table-condensed table-striped'> \n\
                                 \<tr> \n\
                                 \<th>Tag Name</th> \n\
                                 \<th>Slave Parameter Id </th> \n\
@@ -116,7 +116,10 @@ buildCompanyTemplate mongoConf cName = do
        _ -> do
          siteList <-fetchSites mongoConf (companyCompanyIdRef . head $ companyList)
          siteTemplates <- traverse (\site' -> buildSiteTemplate mongoConf site') siteList
-         let baseTemplate = (newSTMP "# Onping Register Report \n\n\
+         let baseTemplate = (newSTMP "<head>\n\
+                                     \<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>\n\
+                                     \</head>\n\n\
+                                     \# Onping Register Report \n\n\
                                      \## Company: $company_name$ \n\n\
                                      \$site_template$ \n") :: StringTemplate String
              companySTemplate = setAttribute "company_name" cName .

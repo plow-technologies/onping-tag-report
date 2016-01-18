@@ -30,7 +30,9 @@ import           Plowtech.Request.Haxl                   (PlowStateStore)
 import qualified Plowtech.Request.Haxl                   as Haxl
 import qualified Plowtech.Request.Haxl                   as Haxl
 import qualified Plowtech.Request.Haxl.Company           as Haxl
+import qualified Plowtech.Request.Haxl.Location          as Haxl
 import qualified Plowtech.Request.Haxl.OnpingTagCombined as Haxl
+import qualified Plowtech.Request.Haxl.Site              as Haxl
 
 -- String Template
 import           Text.StringTemplate
@@ -56,10 +58,10 @@ fetchCompanies plowStateStore companyName = do
    companyEntities <- Haxl.runHaxlWithPlowState plowStateStore $ Haxl.getCompaniesByName [companyName]
    return $ entityVal <$> companyEntities
 
--- fetchSites :: MongoDBConf -> Int -> IO [Site]
--- fetchSites mongoConf companyId = do
---   siteEntities <- runDBConf mongoConf $ selectList [SiteCompanyIdRef ==. companyId] []
---   return $ entityVal <$> siteEntities
+fetchSites :: PlowStateStore -> Int -> IO [Site]
+fetchSites plowStateStore companyId = do
+  siteEntities <- Haxl.runHaxlWithPlowState  plowStateStore $ Haxl.getSitesByCompanyIdRefs [companyId]
+  return $ entityVal <$> siteEntities
 
 -- fetchLocations :: MongoDBConf -> Int -> IO [Location]
 -- fetchLocations mongoConf siteId = do

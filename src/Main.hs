@@ -14,9 +14,9 @@ Portability :  portable
 {-# LANGUAGE OverloadedStrings #-}
 
 --General
-import           Control.Applicative   ((<$>))
+
 import           Data.Text             (pack)
-import qualified Data.Traversable      as T
+
 -- Database
 import           Plowtech.Config
 import           Plowtech.Request.Haxl

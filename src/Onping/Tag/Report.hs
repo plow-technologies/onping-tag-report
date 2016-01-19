@@ -18,9 +18,8 @@ Portability :  portable
 module Onping.Tag.Report where
 
 -- General
-import           Control.Applicative                     ((<$>))
+
 import           Data.Text                               (Text)
-import           Data.Traversable                        (traverse)
 
 -- Database
 import           Plowtech.Persist.Settings
@@ -28,7 +27,7 @@ import           Plowtech.Persist.Settings
 import           Database.Persist
 import           Plowtech.Request.Haxl                   (PlowStateStore)
 import qualified Plowtech.Request.Haxl                   as Haxl
-import qualified Plowtech.Request.Haxl                   as Haxl
+
 import qualified Plowtech.Request.Haxl.Company           as Haxl
 import qualified Plowtech.Request.Haxl.Location          as Haxl
 import qualified Plowtech.Request.Haxl.OnpingTagCombined as Haxl
@@ -54,8 +53,8 @@ import           Text.StringTemplate
 
 -- fetchCompanies :: PlowStateStore -> Text -> IO [Company]
 fetchCompanies ::  PlowStateStore  -> Text   -> IO [Company]
-fetchCompanies plowStateStore companyName = do
-   companyEntities <- Haxl.runHaxlWithPlowState plowStateStore $ Haxl.getCompaniesByName [companyName]
+fetchCompanies plowStateStore companyName' = do
+   companyEntities <- Haxl.runHaxlWithPlowState plowStateStore $ Haxl.getCompaniesByName [companyName']
    return $ entityVal <$> companyEntities
 
 fetchSites :: PlowStateStore -> Int -> IO [Site]

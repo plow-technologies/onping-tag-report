@@ -14,17 +14,23 @@ Portability :  portable
 {-# LANGUAGE OverloadedStrings #-}
 
 --General
-import           Control.Applicative    ((<$>))
-import           Data.Text              (pack)
-import qualified Data.Traversable       as T
+import           Control.Applicative   ((<$>))
+import           Data.Text             (pack)
+import qualified Data.Traversable      as T
 -- Database
-import           Persist.Mongo.Settings
+import           Plowtech.Config
+import           Plowtech.Request.Haxl
 -- Internal
 import           Onping.Tag.Report
 
 main :: IO ()
 main = do
-  mongoConf <- readDBConf "config.yml"
+  (Right mongoConf) <- readDBConf "mongoDBConfig.yml"
+  (Right clientConf) <- readDataClientConf "onpingDataClient.yml"
+  (Right singleWellRocConfig) <- readSingleWellRocConfig "singleWellRocConfig.yml"
+  (Right singleWellMicrologixConfig) <- readSingleWellMicrologixConfig "singleWellMicrologixConfig.yml"
+  connectionPool <- buildConnectionPool mongoConf 3 256
+  let plowStateStore = createHaxlStateStore $ PlowtechHaxlConf connectionPool clientConf singleWellRocConfig singleWellMicrologixConfig
   putStrLn "Welcome to Onping Tag Report Generator, Please choose an option"
   putStrLn "1. Generate Tag Report for a Company."
   input <- getLine
@@ -32,12 +38,9 @@ main = do
     "1" -> do
            putStrLn "Input a Company Name :"
            companyname <- getLine
-           ecompanySTemplate <- T.sequence $ (\conf -> buildCompanyTemplate conf (pack companyname)) <$> mongoConf
-           case ecompanySTemplate of
-             Left e -> print e
-             Right companySTemplate -> do
-                                    putStrLn companySTemplate
-                                    writeFile "onpingTagReport.MD" companySTemplate
-                                    print ("Successfully Write to File: onpingTagReport.MD"::String)
-                                    return ()
+           companySTemplate <- buildCompanyTemplate plowStateStore (pack companyname)
+           putStrLn companySTemplate
+           writeFile "onpingTagReport.md" companySTemplate
+           print ("Successfully Write to File: onpingTagReport.md"::String)
+           return ()
     _ -> print ("Not available option."::String)
